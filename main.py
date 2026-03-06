@@ -10,7 +10,7 @@ from src.imageClassification.logisticRegression.logistic_regression import lr_pr
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "src", "imageClassification", "data")
-BREEDS = ["Border_collie", "German_shepherd", "Pomeranian"]
+BREEDS = ["Italian_greyhound", "Mexican_hairless", "Pomeranian"]
 IMSIZE = (64, 64)
 
 def main():
@@ -21,7 +21,7 @@ def main():
     
     # Split
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.20, random_state=42, stratify=y
+        X, y, test_size=0.167, random_state=42, stratify=y
     )
     
     # Train & Predict
