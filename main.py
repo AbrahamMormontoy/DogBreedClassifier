@@ -4,7 +4,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
 
-# Imports
 from src.imageClassification.dataset.image_loader import load_dataset
 from src.imageClassification.logisticRegression.logistic_regression import lr_predict
 

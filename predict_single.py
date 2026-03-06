@@ -50,13 +50,10 @@ def predict_image_from_path(image_path, clf, imsize=(64, 64), to_gray=True):
 
 
 def main():
-    """Demo: Train model and predict single image probability"""
-    print("=" * 60)
-    print("SINGLE IMAGE PREDICTION DEMO")
-    print("=" * 60)
-    
+    """Train model and predict single image probability"""
+    print("Logistic Regression - Predict Single Image\n")
     # Load data
-    print("\nLoading dataset...")
+    print("Loading dataset...")
     X, y = load_dataset(DATA_DIR, imsize=IMSIZE, to_gray=True, breeds=BREEDS)
     
     # Split
@@ -69,56 +66,11 @@ def main():
     clf = lr_train(X_train, y_train, n_components=150)
     print("Model trained successfully!")
     
-    # Demo 1: Predict a random test image
-    print("\n" + "-" * 60)
-    print("DEMO 1: Random test image prediction")
-    print("-" * 60)
-    
-    random_idx = np.random.randint(0, len(X_test))
-    single_image = X_test[random_idx]
-    true_label = y_test[random_idx]
-    
-    # Get probability prediction
-    result = predict_single_image_proba(clf, single_image)
-    
+    # Get probability prediction    
     display_names = [b.split('_')[-1] if '_' in b else b for b in BREEDS]
     
-    print(f"\nTrue breed: {display_names[true_label]}")
-    print(f"Predicted breed: {display_names[result['predicted_class']]}")
-    print(f"Confidence: {result['confidence']:.2%}\n")
-    
-    print("Class probabilities:")
-    for i, prob in enumerate(result['probabilities']):
-        print(f"  {display_names[i]:<20} {prob:.2%}")
-    
-    # Demo 2: Predict from image file path
-    print("\n" + "-" * 60)
-    print("DEMO 2: Predict from image file")
-    print("-" * 60)
-    
-    # Find a sample image from the dataset
-    sample_breed = BREEDS[0]
-    sample_dir = os.path.join(DATA_DIR, sample_breed)
-    if os.path.exists(sample_dir):
-        image_files = [f for f in os.listdir(sample_dir) if f.endswith(('.jpg', '.jpeg', '.png'))]
-        if image_files:
-            sample_image_path = os.path.join(sample_dir, image_files[0])
-            print(f"\nPredicting image: {sample_image_path}")
-            
-            result = predict_image_from_path(sample_image_path, clf, imsize=IMSIZE, to_gray=True)
-            
-            if result:
-                print(f"\nPredicted breed: {display_names[result['predicted_class']]}")
-                print(f"Confidence: {result['confidence']:.2%}\n")
-                
-                print("Class probabilities:")
-                for i, prob in enumerate(result['probabilities']):
-                    print(f"  {display_names[i]:<20} {prob:.2%}")
-    
-    # Demo 3: Predict user's custom images from data/images
-    print("\n" + "-" * 60)
-    print("DEMO 3: Predict your custom images")
-    print("-" * 60)
+
+    print("Predict your custom images")
     
     custom_images_dir = os.path.join(BASE_DIR, "data", "images")
     if os.path.exists(custom_images_dir):
@@ -129,31 +81,16 @@ def main():
             
             for img_file in custom_files:
                 img_path = os.path.join(custom_images_dir, img_file)
-                print(f"\n📸 Predicting: {img_file}")
+                print(f"\nPredicting: {img_file}")
                 
                 result = predict_image_from_path(img_path, clf, imsize=IMSIZE, to_gray=True)
                 
                 if result:
-                    print(f"   Predicted breed: {display_names[result['predicted_class']]}")
-                    print(f"   Confidence: {result['confidence']:.2%}")
-                    print(f"   Probabilities:")
+                    print(f"Predicted breed: {display_names[result['predicted_class']]}")
+                    print(f"Confidence: {result['confidence']:.2%}")
+                    print(f"Probabilities:")
                     for i, prob in enumerate(result['probabilities']):
                         print(f"     {display_names[i]:<18} {prob:.2%}")
-        else:
-            print("\n⚠️  No images found in data/images/")
-            print("   Add your dog images (.jpg, .jpeg, .png) to data/images/ and run again!")
-    else:
-        print("\n⚠️  Directory data/images/ doesn't exist")
-        print("   Create it and add your dog images there!")
-    
-    print("\n" + "=" * 60)
-    print("To predict your own image:")
-    print("  from predict_single import predict_image_from_path, lr_train")
-    print("  # Train your model first")
-    print("  clf = lr_train(X_train, y_train)")
-    print("  # Then predict")
-    print("  result = predict_image_from_path('path/to/your/image.jpg', clf)")
-    print("=" * 60)
 
 
 if __name__ == "__main__":
