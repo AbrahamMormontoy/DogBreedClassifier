@@ -20,20 +20,19 @@ def main():
     
     # Split
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.167, random_state=42, stratify=y
+        X, y, test_size=0.2, random_state=42, stratify=y
     )
     
     # Train & Predict
-    y_pred = lr_predict(X_train, y_train, X_test, n_components=150)
-    
-    # Accuracy
+    y_pred = lr_predict(X_train, y_train, X_test, C=10.0, max_iter=2000, n_components=300)
+
     acc = accuracy_score(y_test, y_pred)
-    print(f"\nOVERALL ACCURACY: {acc:.3f} out of {sum(y_test == y_pred)}/{len(y_test)} samples")
+    print(f"\nACCURACY: {acc:.3f} BASED ON THE {sum(y_test == y_pred)}/{len(y_test)} samples")
 
     # Use classification report from sklearn to get precision, recall, f1-score
     display_names = [b.split('-')[-1] for b in BREEDS]
     
-    print("\nTECHNICAL REPORT: LOGISTIC REGRESSION\n")
+    print("\nTECHNICAL REPORT USING SKLEARN CLASSIFICATION REPORT\n")
     print(classification_report(y_test, y_pred, target_names=display_names))
 
     

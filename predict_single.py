@@ -3,7 +3,6 @@ import numpy as np
 import cv2
 from sklearn.model_selection import train_test_split
 
-# Imports
 from src.imageClassification.dataset.image_loader import load_dataset
 from src.imageClassification.logisticRegression.logistic_regression import lr_train, predict_single_image_proba
 
@@ -53,7 +52,7 @@ def main():
     """Train model and predict single image probability"""
     print("Logistic Regression - Predict Single Image\n")
     # Load data
-    print("Loading dataset...")
+    print("Loading dataset:")
     X, y = load_dataset(DATA_DIR, imsize=IMSIZE, to_gray=True, breeds=BREEDS)
     
     # Split
@@ -62,7 +61,7 @@ def main():
     )
     
     # Train the model
-    print("\nTraining model...")
+    print("\nTraining model:")
     clf = lr_train(X_train, y_train, n_components=150)
     print("Model trained successfully!")
     

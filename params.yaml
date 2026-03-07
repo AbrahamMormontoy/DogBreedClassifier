@@ -1,15 +1,3 @@
-# Active pipeline: CNN
-cnn:
-  imsize: 64
-  epochs: 30
-  batch_size: 32
-  lr: 1e-3
-  test_size: 0.2
-  random_state: 42
-  breeds:
-    - Border_collie
-    - German_shepherd
-    - Pomeranian
 
 # Kept for reference (Milestone 1 baseline)
 logistic_regression:
@@ -21,6 +9,6 @@ logistic_regression:
   random_state: 42
   # Milestone 1 MVS: only these three visually distinct breeds are used.
   breeds:
-    - Border_collie
-    - German_shepherd
+    - Italian_greyhound
+    - Mexican hairless
     - Pomeranian
