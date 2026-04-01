@@ -11,7 +11,7 @@ from model import build_model
 from dataset import test_transforms
 
 
-TYPE_IMAGE = (".jpg", ".jpeg", ".png", ".bmp", ".webp")
+TYPE_IMAGE = (".jpg", ".jpeg", ".png")
 
 
 def load_class_names(breeds_dir: str) -> List[str]:
@@ -58,13 +58,7 @@ def build_inference_model(
     return model
 
 
-def predict_topk_for_image(
-    model: torch.nn.Module,
-    image_path: str,
-    class_names: List[str],
-    device: torch.device,
-    topk: int = 3,
-) -> List[Tuple[str, float]]:
+def predict_topk_for_image(model: torch.nn.Module, image_path: str, class_names: List[str], device: torch.device, topk: int = 3,) -> List[Tuple[str, float]]:
     image = Image.open(image_path).convert("RGB")
     x = test_transforms(image).unsqueeze(0).to(device)
 
