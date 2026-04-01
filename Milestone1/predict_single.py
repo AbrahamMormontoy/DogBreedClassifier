@@ -13,39 +13,23 @@ IMSIZE = (64, 64)
 
 
 def predict_image_from_path(image_path, clf, imsize=(64, 64), to_gray=True):
-    """
-    Load an image from a file path and predict its breed with probabilities.
+
+    img = cv2.imread(image_path)
     
-    Args:
-        image_path: Path to the image file
-        clf: Trained classifier
-        imsize: Size to resize the image to
-        to_gray: Whether to convert to grayscale
+    if img is None:
+        raise ValueError(f"Could not load image from {image_path}")
     
-    Returns:
-        dict: Prediction results with probabilities
-    """
-    try:
-        # Load and preprocess the image
-        img = cv2.imread(image_path)
+    if to_gray:
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         
-        if img is None:
-            raise ValueError(f"Could not load image from {image_path}")
+    img_resized = cv2.resize(img, imsize)
+    img_flattened = img_resized.flatten()
         
-        if to_gray:
-            img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # Get prediction
+    result = predict_single_image_proba(clf, img_flattened)
+    result['image_path'] = image_path
         
-        img_resized = cv2.resize(img, imsize)
-        img_flattened = img_resized.flatten()
-        
-        # Get prediction
-        result = predict_single_image_proba(clf, img_flattened)
-        result['image_path'] = image_path
-        
-        return result
-    except Exception as e:
-        print(f"Error processing image {image_path}: {e}")
-        return None
+    return result
 
 
 def main():
