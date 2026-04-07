@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 CNN_implementation/selected_breeds/
+=======
+>>>>>>> fd3b08a1b4069d22bcab92803d5c65dd6c5aac03
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
