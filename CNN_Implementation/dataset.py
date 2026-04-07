@@ -19,9 +19,9 @@ from torch.utils.data import random_split, DataLoader
 
 # ── Constants ────────────────────────────────────────────────────────────────
 
-BREEDS_DIR  = "selected_breeds"   # Root folder containing one subfolder per breed
-IMAGE_SIZE  = 224                  # ResNet-18 expects 224x224 inputs
-BATCH_SIZE  = 32
+BREEDS_DIR = "selected_breeds"   # Root folder containing one subfolder per breed
+IMAGE_SIZE = 224                  # ResNet-18 expects 224x224 inputs
+BATCH_SIZE = 32
 NUM_WORKERS = 2                    # Parallel workers for data loading
 TRAIN_RATIO = 0.75                 # 75% train, 25% test
 

@@ -37,11 +37,6 @@ def load_checkpoint_weights(checkpoint_path: str, device: torch.device):
         if looks_like_state_dict:
             return ckpt
 
-    raise ValueError(
-        "Formato de checkpoint no reconocido. "
-        "Esperaba state_dict o dict con 'model_state_dict'/'state_dict'."
-    )
-
 
 def build_inference_model(
     checkpoint_path: str,
