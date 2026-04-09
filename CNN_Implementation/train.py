@@ -21,6 +21,8 @@ import csv
 import argparse
 import torch
 import torch.nn as nn
+import pandas as pd
+import matplotlib.pyplot as plt
 
 from dataset import get_dataloaders
 from model   import build_model
@@ -202,6 +204,20 @@ def train(epochs: int, lr: float) -> None:
     print(f"  Checkpoint saved to : {CHECKPOINT}")
     print(f"  Training log saved  : {LOG_FILE}")
 
+def plot_training_curves(log_csv: str, out_path: str) -> None:
+    df = pd.read_csv(log_csv)
+    plt.figure(figsize=(10, 5))
+    plt.plot(df["epoch"], df["train_loss"], label="Train Loss")
+    plt.plot(df["epoch"], df["test_loss"], label="Test Loss")
+    plt.plot(df["epoch"], df["train_acc"], label="Train Accuracy")
+    plt.plot(df["epoch"], df["top1_acc"], label="Test Top-1 Accuracy")
+    plt.plot(df["epoch"], df["top3_acc"], label="Test Top-3 Accuracy")
+    plt.xlabel("Epoch")
+    plt.title("Training Curves")
+    plt.legend()
+    plt.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close()
+    print(f"<Saved:> {out_path}")
 
 # ── Entry point ───────────────────────────────────────────────────────────────
 
@@ -220,3 +236,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     train(epochs=args.epochs, lr=args.lr)
+    plot_training_curves(LOG_FILE, "training_curves.png")

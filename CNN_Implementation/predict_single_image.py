@@ -6,6 +6,7 @@ import torch
 import torch.nn.functional as F
 from PIL import Image
 from torchvision import datasets
+import matplotlib.pyplot as plt
 
 from model import build_model
 from dataset import test_transforms
@@ -88,6 +89,43 @@ def collect_images(input_path: str) -> List[str]:
     raise FileNotFoundError(f"No existe la ruta: {input_path}")
 
 
+def plot_predictions(image_paths: List[str], predictions: dict, out_path: str = "predictions.png"):
+    """Plot images with their top-k predictions as bar charts."""
+    num_images = len(image_paths)
+    fig, axes = plt.subplots(num_images, 2, figsize=(14, 4 * num_images))
+    
+    if num_images == 1:
+        axes = axes.reshape(1, -1)
+    
+    for idx, image_path in enumerate(image_paths):
+        # Load and display image
+        image = Image.open(image_path).convert("RGB")
+        axes[idx, 0].imshow(image)
+        axes[idx, 0].set_title(os.path.basename(image_path), fontsize=12, fontweight="bold")
+        axes[idx, 0].axis("off")
+        
+        # Plot predictions as horizontal bar chart
+        preds = predictions[image_path]
+        breeds = [p[0] for p in preds]
+        confidences = [p[1] * 100 for p in preds]
+        
+        bars = axes[idx, 1].barh(breeds, confidences, color="steelblue")
+        axes[idx, 1].set_xlabel("Confidence (%)", fontsize=10)
+        axes[idx, 1].set_xlim(0, 100)
+        
+        # Add percentage labels on bars
+        for i, (bar, conf) in enumerate(zip(bars, confidences)):
+            axes[idx, 1].text(conf + 1, i, f"{conf:.2f}%", va="center", fontsize=9)
+        
+        axes[idx, 1].set_title("Top-K Predictions", fontsize=12, fontweight="bold")
+        axes[idx, 1].invert_yaxis()
+    
+    plt.tight_layout()
+    plt.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close()
+    print(f"<Saved:> {out_path}")
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Predice Top-K razas para imagen(es) con el modelo entrenado."
@@ -135,6 +173,8 @@ def main():
     print(f"Clases: {len(class_names)}")
     print("=" * 70)
 
+    predictions = {}
+    
     for image_path in image_paths:
         preds = predict_topk_for_image(
                 model=model,
@@ -143,10 +183,15 @@ def main():
                 device=device,
                 topk=args.topk,
                 )
+        predictions[image_path] = preds
 
         print(f"\nImagen: {image_path}")
         for rank, (breed, prob) in enumerate(preds, start=1):
             print(f"  {rank}. {breed:<30} {prob:.2%}")
+    
+    # Plot predictions
+    if len(image_paths) > 0:
+        plot_predictions(image_paths, predictions)
 
 
 if __name__ == "__main__":
