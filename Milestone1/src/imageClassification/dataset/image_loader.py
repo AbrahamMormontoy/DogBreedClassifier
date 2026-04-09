@@ -1,11 +1,7 @@
 import os
 import cv2
 import numpy as np
-<<<<<<< HEAD
-from imageClassification.preprocessing.image_transform import normalize
-=======
 
->>>>>>> fd3b08a1b4069d22bcab92803d5c65dd6c5aac03
 def load_dataset(data_dir, imsize=(64, 64), to_gray=True, breeds=None):
     """
     Loads images from breed folders, resizes them, and flattens them into vectors.
@@ -33,14 +29,8 @@ def load_dataset(data_dir, imsize=(64, 64), to_gray=True, breeds=None):
                     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
                 
                 img_resized = cv2.resize(img, imsize)
-<<<<<<< HEAD
-                normalized_img = normalize(img_resized)
-                # Flattening 64x64 into 4096 features
-                X.append(normalized_img.flatten())
-=======
                 # Flattening 64x64 into 4096 features
                 X.append(img_resized.flatten())
->>>>>>> fd3b08a1b4069d22bcab92803d5c65dd6c5aac03
                 y.append(idx)
                 count += 1
             except Exception:

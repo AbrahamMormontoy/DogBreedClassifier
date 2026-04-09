@@ -23,7 +23,7 @@ def set_seed(seed: int = 42):
 
 
 def make_balanced_indices(base_dataset, train_per_class: int, test_per_class: int, seed: int):
-    """Separa índices balanceados por clase para train y test."""
+    """Separate indices for training and testing."""
     class_to_indices = defaultdict(list)
     for idx, (_, y) in enumerate(base_dataset.samples):
         class_to_indices[y].append(idx)
@@ -45,7 +45,7 @@ def make_balanced_indices(base_dataset, train_per_class: int, test_per_class: in
 
 
 def train_one_epoch(model, loader, criterion, optimizer, device):
-    """Entrena una época."""
+    """Train for one epoch."""
     model.train()
     total_loss, correct, total = 0.0, 0, 0
 
@@ -67,7 +67,7 @@ def train_one_epoch(model, loader, criterion, optimizer, device):
 
 @torch.no_grad()
 def evaluate_per_class(model, loader, num_classes, device):
-    """Evalúa accuracy por clase."""
+    """Evaluate accuracy per class."""
     model.eval()
     correct = np.zeros(num_classes, dtype=np.int64)
     total = np.zeros(num_classes, dtype=np.int64)
@@ -89,15 +89,15 @@ def evaluate_per_class(model, loader, num_classes, device):
 
 def run_experiment(breeds_dir: str, small_n: int, large_n: int, test_per_class: int, epochs: int, out_dir: str):
     """
-    Ejecuta experimento con dos tamaños de training.
-    
+    Run experiment with two training sizes.
+
     Args:
-        breeds_dir: Ruta a selected_breeds
-        small_n: Imágenes por clase para entrenar modelo pequeño
-        large_n: Imágenes por clase para entrenar modelo grande
-        test_per_class: Imágenes por clase para test
-        epochs: Épocas de entrenamiento
-        out_dir: Carpeta de salida
+        breeds_dir: Path to selected_breeds
+        small_n: Images per class for training small model
+        large_n: Images per class for training large model
+        test_per_class: Images per class for testing
+        epochs: Training epochs
+        out_dir: Output folder
     """
     os.makedirs(out_dir, exist_ok=True)
     set_seed(42)
@@ -114,14 +114,13 @@ def run_experiment(breeds_dir: str, small_n: int, large_n: int, test_per_class: 
     train_ds_full = datasets.ImageFolder(root=breeds_dir, transform=train_transforms)
     test_ds_full = datasets.ImageFolder(root=breeds_dir, transform=test_transforms)
 
-    # Experimento: entrenar con small_n y large_n imágenes por clase
     sizes = [small_n, large_n]
     per_class_results = {}
     mean_results = []
 
     for n in sizes:
         print(f"\n{'─'*60}")
-        print(f"ENTRENANDO CON {n} IMÁGENES POR CLASE")
+        print(f"Training with {n} images per class")
         print(f"{'─'*60}")
         
         train_idx, test_idx = make_balanced_indices(base, n, test_per_class, seed=42 + n)
@@ -132,8 +131,8 @@ def run_experiment(breeds_dir: str, small_n: int, large_n: int, test_per_class: 
         train_loader = DataLoader(train_ds, batch_size=32, shuffle=True, num_workers=2)
         test_loader = DataLoader(test_ds, batch_size=32, shuffle=False, num_workers=2)
 
-        print(f"  Train set: {len(train_ds)} imágenes ({n} por clase)")
-        print(f"  Test set:  {len(test_ds)} imágenes ({test_per_class} por clase)\n")
+        print(f"  Train set: {len(train_ds)} images ({n} per class)")
+        print(f"  Test set:  {len(test_ds)} images ({test_per_class} per class)\n")
 
         model, criterion, optimizer = build_model(num_classes=num_classes, learning_rate=0.001, device=device)
         scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=max(1, epochs // 2), gamma=0.1)
@@ -156,7 +155,7 @@ def run_experiment(breeds_dir: str, small_n: int, large_n: int, test_per_class: 
         w.writerow(["breed", f"{small_n}_images", f"{large_n}_images"])
         for i, name in enumerate(class_names):
             w.writerow([name, per_class_results[small_n][i], per_class_results[large_n][i]])
-    print(f"✓ Guardado: {per_class_csv}")
+    print(f"<Saved:> {per_class_csv}")
 
     # Guardar CSV de media
     mean_csv = os.path.join(out_dir, "mean_accuracy.csv")
@@ -165,14 +164,14 @@ def run_experiment(breeds_dir: str, small_n: int, large_n: int, test_per_class: 
         w.writerow(["train_images_per_class", "mean_accuracy"])
         for n, m in mean_results:
             w.writerow([n, m])
-    print(f"✓ Guardado: {mean_csv}")
+    print(f"<Saved:> {mean_csv}")
 
     return class_names, per_class_results, mean_results, small_n, large_n
 
 
 def plot_per_class_comparison(class_names, per_class_results, small_n, large_n, out_path):
     """
-    Gráfica comparativa por clase: barras horizontales ordenadas.
+    Generate a horizontal bar chart comparing per-class accuracy for two training sizes.
     """
     small_acc = per_class_results[small_n]
     large_acc = per_class_results[large_n]
@@ -203,12 +202,12 @@ def plot_per_class_comparison(class_names, per_class_results, small_n, large_n, 
     plt.tight_layout()
     plt.savefig(out_path, dpi=150, bbox_inches="tight")
     plt.close()
-    print(f"✓ Guardado: {out_path}")
+    print(f"<Saved:> {out_path}")
 
 
 def plot_mean_accuracy_curve(mean_results, out_path):
     """
-    Gráfica de accuracy media vs imágenes por clase.
+    Mean accuracy vs images per class.
     """
     xs = np.array([x for x, _ in mean_results], dtype=float)
     ys = np.array([y for _, y in mean_results], dtype=float)
@@ -225,35 +224,35 @@ def plot_mean_accuracy_curve(mean_results, out_path):
     plt.tight_layout()
     plt.savefig(out_path, dpi=150, bbox_inches="tight")
     plt.close()
-    print(f"✓ Guardado: {out_path}")
+    print(f"✓ Saved: {out_path}")
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Experimento simple: compara dos tamaños de training."
+        description="Simple experiment: compares two training sizes."
     )
     parser.add_argument(
         "--epochs",
         type=int,
         default=5,
-        help="Épocas de entrenamiento (default: 5)"
+        help="Training epochs (default: 5)"
     )
     parser.add_argument(
         "--small",
         type=int,
         default=15,
-        help="Imágenes por clase para modelo pequeño (default: 15)"
+        help="Images per class for small model (default: 15)"
     )
     parser.add_argument(
         "--large",
         type=int,
         default=100,
-        help="Imágenes por clase para modelo grande (default: 100)"
+        help="Images per class for large model (default: 100)"
     )
     parser.add_argument(
         "--out-dir",
         default="plots_scale",
-        help="Carpeta de salida (default: plots_scale)"
+        help="Output folder (default: plots_scale)"
     )
     args = parser.parse_args()
 
@@ -268,7 +267,7 @@ def main():
 
     # Generar gráficas
     print(f"\n{'='*60}")
-    print("GENERANDO GRÁFICAS")
+    print("Generating plots...")
     print(f"{'='*60}\n")
     
     plot_per_class_comparison(
@@ -285,7 +284,7 @@ def main():
     )
 
     print(f"\n{'='*60}")
-    print("✓ EXPERIMENTO COMPLETADO")
+    print("Experiment completed")
     print(f"{'='*60}\n")
 
 
