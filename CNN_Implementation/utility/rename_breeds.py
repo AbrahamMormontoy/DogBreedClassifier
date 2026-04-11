@@ -1,25 +1,9 @@
-"""
-rename_breeds.py
-----------------
-Strips the Stanford Dogs dataset prefix from breed folder names.
-
-Before: selected_breeds/n02085620-Chihuahua/
-After:  selected_breeds/Chihuahua/
-
-Usage:
-    python rename_breeds.py
-"""
-
 import os
 import re
 
 BREEDS_DIR = "selected_breeds"
 
 def clean_name(folder_name: str) -> str:
-    """
-    Remove the leading 'nXXXXXXXX-' prefix from a folder name.
-    e.g. 'n02085620-Chihuahua' -> 'Chihuahua'
-    """
     return re.sub(r'^n\d+-', '', folder_name)
 
 def rename_breed_folders(base_dir: str) -> None:

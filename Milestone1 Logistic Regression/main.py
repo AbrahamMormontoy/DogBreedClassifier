@@ -15,21 +15,17 @@ IMSIZE = (64, 64)
 def main():
     print("--- Logistic Regression ---")
     
-    # Load data
     X, y = load_dataset(DATA_DIR, imsize=IMSIZE, to_gray=True, breeds=BREEDS)
     
-    # Split
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42, stratify=y
     )
     
-    # Train & Predict
     y_pred = lr_predict(X_train, y_train, X_test, C=10.0, max_iter=2000, n_components=300)
 
     acc = accuracy_score(y_test, y_pred)
     print(f"\nACCURACY: {acc:.3f} BASED ON THE {sum(y_test == y_pred)}/{len(y_test)} samples")
 
-    # Use classification report from sklearn to get precision, recall, f1-score
     display_names = [b.split('-')[-1] for b in BREEDS]
     
     print("\nTECHNICAL REPORT USING SKLEARN CLASSIFICATION REPORT\n")

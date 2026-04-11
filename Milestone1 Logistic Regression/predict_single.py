@@ -33,23 +33,18 @@ def predict_image_from_path(image_path, clf, imsize=(64, 64), to_gray=True):
 
 
 def main():
-    """Train model and predict single image probability"""
     print("Logistic Regression - Predict Single Image\n")
-    # Load data
     print("Loading dataset:")
     X, y = load_dataset(DATA_DIR, imsize=IMSIZE, to_gray=True, breeds=BREEDS)
     
-    # Split
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.167, random_state=42, stratify=y
     )
     
-    # Train the model
     print("\nTraining model:")
     clf = lr_train(X_train, y_train, n_components=150)
     print("Model trained successfully!")
     
-    # Get probability prediction    
     display_names = [b.split('_')[-1] if '_' in b else b for b in BREEDS]
     
 

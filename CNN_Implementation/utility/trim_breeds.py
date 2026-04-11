@@ -1,18 +1,3 @@
-"""
-trim_breeds.py
---------------
-Randomly removes images from each breed folder until every folder
-contains exactly TARGET_COUNT images.
-
-Folders that already have <= TARGET_COUNT images are left untouched.
-
-Usage:
-    python trim_breeds.py
-
-    # Dry run (preview what would be deleted, nothing actually removed):
-    python trim_breeds.py --dry-run
-"""
-
 import os
 import random
 import argparse
@@ -23,7 +8,6 @@ IMAGE_EXTS    = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
 
 
 def get_images(folder: str) -> list[str]:
-    """Return a list of image filenames inside folder."""
     return [
         f for f in os.listdir(folder)
         if os.path.splitext(f)[1].lower() in IMAGE_EXTS
@@ -87,5 +71,5 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    random.seed(42)   # Fixed seed so the same images are removed every run
+    random.seed(42)
     trim_breeds(BREEDS_DIR, TARGET_COUNT, dry_run=args.dry_run)

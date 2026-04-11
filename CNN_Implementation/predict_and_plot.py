@@ -23,7 +23,6 @@ def set_seed(seed: int = 42):
 
 
 def make_balanced_indices(base_dataset, train_per_class: int, test_per_class: int, seed: int):
-    """Separate indices for training and testing."""
     class_to_indices = defaultdict(list)
     for idx, (_, y) in enumerate(base_dataset.samples):
         class_to_indices[y].append(idx)
@@ -45,7 +44,6 @@ def make_balanced_indices(base_dataset, train_per_class: int, test_per_class: in
 
 
 def train_one_epoch(model, loader, criterion, optimizer, device):
-    """Train for one epoch."""
     model.train()
     total_loss, correct, total = 0.0, 0, 0
 
@@ -67,7 +65,6 @@ def train_one_epoch(model, loader, criterion, optimizer, device):
 
 @torch.no_grad()
 def evaluate_per_class(model, loader, num_classes, device):
-    """Evaluate accuracy per class."""
     model.eval()
     correct = np.zeros(num_classes, dtype=np.int64)
     total = np.zeros(num_classes, dtype=np.int64)
@@ -88,17 +85,6 @@ def evaluate_per_class(model, loader, num_classes, device):
 
 
 def run_experiment(breeds_dir: str, small_n: int, large_n: int, test_per_class: int, epochs: int, out_dir: str):
-    """
-    Run experiment with two training sizes.
-
-    Args:
-        breeds_dir: Path to selected_breeds
-        small_n: Images per class for training small model
-        large_n: Images per class for training large model
-        test_per_class: Images per class for testing
-        epochs: Training epochs
-        out_dir: Output folder
-    """
     os.makedirs(out_dir, exist_ok=True)
     set_seed(42)
 
@@ -148,7 +134,6 @@ def run_experiment(breeds_dir: str, small_n: int, large_n: int, test_per_class: 
         
         print(f"\n  ✓ Mean Accuracy: {mean_acc:.4f} ({mean_acc*100:.2f}%)\n")
 
-    # Guardar CSV por clase
     per_class_csv = os.path.join(out_dir, "per_class_accuracy.csv")
     with open(per_class_csv, "w", newline="") as f:
         w = csv.writer(f)
@@ -157,7 +142,6 @@ def run_experiment(breeds_dir: str, small_n: int, large_n: int, test_per_class: 
             w.writerow([name, per_class_results[small_n][i], per_class_results[large_n][i]])
     print(f"<Saved:> {per_class_csv}")
 
-    # Guardar CSV de media
     mean_csv = os.path.join(out_dir, "mean_accuracy.csv")
     with open(mean_csv, "w", newline="") as f:
         w = csv.writer(f)
@@ -170,13 +154,9 @@ def run_experiment(breeds_dir: str, small_n: int, large_n: int, test_per_class: 
 
 
 def plot_per_class_comparison(class_names, per_class_results, small_n, large_n, out_path):
-    """
-    Generate a horizontal bar chart comparing per-class accuracy for two training sizes.
-    """
     small_acc = per_class_results[small_n]
     large_acc = per_class_results[large_n]
 
-    # Ordenar por accuracy del modelo grande
     order = np.argsort(large_acc)
     class_sorted = [class_names[i] for i in order]
     small_sorted = small_acc[order]
@@ -186,7 +166,6 @@ def plot_per_class_comparison(class_names, per_class_results, small_n, large_n, 
 
     fig, ax = plt.subplots(figsize=(10, 18))
     
-    # Barras separadas y claras
     bar_height = 0.35
     ax.barh(y - bar_height/2, small_sorted, bar_height, color="navy", label=f"{small_n} Train")
     ax.barh(y + bar_height/2, large_sorted, bar_height, color="maroon", label=f"{large_n} Train")
@@ -206,9 +185,6 @@ def plot_per_class_comparison(class_names, per_class_results, small_n, large_n, 
 
 
 def plot_mean_accuracy_curve(mean_results, out_path):
-    """
-    Mean accuracy vs images per class.
-    """
     xs = np.array([x for x, _ in mean_results], dtype=float)
     ys = np.array([y for _, y in mean_results], dtype=float)
 
@@ -229,30 +205,25 @@ def plot_mean_accuracy_curve(mean_results, out_path):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Simple experiment: compares two training sizes."
     )
     parser.add_argument(
         "--epochs",
         type=int,
         default=5,
-        help="Training epochs (default: 5)"
     )
     parser.add_argument(
         "--small",
         type=int,
         default=15,
-        help="Images per class for small model (default: 15)"
     )
     parser.add_argument(
         "--large",
         type=int,
         default=100,
-        help="Images per class for large model (default: 100)"
     )
     parser.add_argument(
         "--out-dir",
         default="plots_scale",
-        help="Output folder (default: plots_scale)"
     )
     args = parser.parse_args()
 
@@ -265,7 +236,6 @@ def main():
         out_dir=args.out_dir
     )
 
-    # Generar gráficas
     print(f"\n{'='*60}")
     print("Generating plots...")
     print(f"{'='*60}\n")

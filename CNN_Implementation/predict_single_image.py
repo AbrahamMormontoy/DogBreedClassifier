@@ -23,16 +23,12 @@ def load_class_names(breeds_dir: str) -> List[str]:
 def load_checkpoint_weights(checkpoint_path: str, device: torch.device):
     ckpt = torch.load(checkpoint_path, map_location=device)
 
-    # Soporta dos formatos:
-    # 1) state_dict puro
-    # 2) diccionario con llave model_state_dict/state_dict
     if isinstance(ckpt, dict):
         if "model_state_dict" in ckpt:
             return ckpt["model_state_dict"]
         if "state_dict" in ckpt:
             return ckpt["state_dict"]
 
-        # Si parece ser directamente un state_dict (keys tipo layer.weight)
         looks_like_state_dict = all(isinstance(k, str) for k in ckpt.keys())
         if looks_like_state_dict:
             return ckpt
@@ -85,7 +81,6 @@ def collect_images(input_path: str) -> List[str]:
 
 
 def plot_predictions(image_paths: List[str], predictions: dict, out_path: str = "predictions.png"):
-    """Plot images with their top-k predictions as bar charts."""
     num_images = len(image_paths)
     fig, axes = plt.subplots(num_images, 2, figsize=(14, 4 * num_images))
     
@@ -93,13 +88,11 @@ def plot_predictions(image_paths: List[str], predictions: dict, out_path: str = 
         axes = axes.reshape(1, -1)
     
     for idx, image_path in enumerate(image_paths):
-        # Load and display image
         image = Image.open(image_path).convert("RGB")
         axes[idx, 0].imshow(image)
         axes[idx, 0].set_title(os.path.basename(image_path), fontsize=12, fontweight="bold")
         axes[idx, 0].axis("off")
         
-        # Plot predictions as horizontal bar chart
         preds = predictions[image_path]
         breeds = [p[0] for p in preds]
         confidences = [p[1] * 100 for p in preds]
@@ -108,7 +101,6 @@ def plot_predictions(image_paths: List[str], predictions: dict, out_path: str = 
         axes[idx, 1].set_xlabel("Confidence (%)", fontsize=10)
         axes[idx, 1].set_xlim(0, 100)
         
-        # Add percentage labels on bars
         for i, (bar, conf) in enumerate(zip(bars, confidences)):
             axes[idx, 1].text(conf + 1, i, f"{conf:.2f}%", va="center", fontsize=9)
         
@@ -123,28 +115,23 @@ def plot_predictions(image_paths: List[str], predictions: dict, out_path: str = 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Predice Top-K razas para imagen(es) con el modelo entrenado."
     )
     parser.add_argument(
         "--input",
         required=True,
-        help="Ruta a una imagen o carpeta con imágenes.",
     )
     parser.add_argument(
         "--checkpoint",
         default="best_model.pth",
-        help="Checkpoint del modelo (default: best_model.pth).",
     )
     parser.add_argument(
         "--breeds-dir",
         default="selected_breeds",
-        help="Carpeta de dataset para reconstruir class_names (default: selected_breeds).",
     )
     parser.add_argument(
         "--topk",
         type=int,
         default=3,
-        help="Cantidad de predicciones a mostrar (default: 3).",
     )
     args = parser.parse_args()
 
@@ -159,7 +146,6 @@ def main():
 
     image_paths = collect_images(args.input)
     if not image_paths:
-        print("No se encontraron imágenes válidas en la ruta.")
         return
 
     print("=" * 70)
@@ -184,7 +170,6 @@ def main():
         for rank, (breed, prob) in enumerate(preds, start=1):
             print(f"  {rank}. {breed:<30} {prob:.2%}")
     
-    # Plot predictions
     if len(image_paths) > 0:
         plot_predictions(image_paths, predictions)
 
