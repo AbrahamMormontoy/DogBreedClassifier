@@ -2,7 +2,7 @@ import os
 import random
 import argparse
 
-BREEDS_DIR    = "selected_breeds"
+BREEDS_DIR    = "dataset"
 TARGET_COUNT  = 150
 IMAGE_EXTS    = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
 

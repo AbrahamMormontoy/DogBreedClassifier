@@ -1,7 +1,7 @@
 import os
 import re
 
-BREEDS_DIR = "selected_breeds"
+BREEDS_DIR = "dataset"
 
 def clean_name(folder_name: str) -> str:
     return re.sub(r'^n\d+-', '', folder_name)
@@ -16,7 +16,7 @@ def rename_breed_folders(base_dir: str) -> None:
                if os.path.isdir(os.path.join(base_dir, f))]
 
     if not folders:
-        print("No folders found inside selected_breeds/.")
+        print("No folders found inside dataset/.")
         return
 
     renamed, skipped = 0, 0
