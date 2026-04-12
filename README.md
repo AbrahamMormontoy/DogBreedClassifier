@@ -44,10 +44,10 @@ Trim each breed folder to a fixed number of images:
 
 ```bash
 cd CNN_Implementation
-python utility/trim_breeds.py --dry-run
+python utility/trim_breeds.py
 ```
 
-This removes images from each folder to have exatly 150 images per breed
+Reduces every breed folder to exactly 150 images by randomly removing extras
 
 Rename breed folders by removing the `n1234-` prefix:
 
@@ -55,6 +55,9 @@ Rename breed folders by removing the `n1234-` prefix:
 cd CNN_Implementation
 python utility/rename_breeds.py
 ```
+
+Before: selected_breeds/n02085620-Chihuahua/ 
+After:  selected_breeds/Chihuahua/
 
 ### 3. Train the main CNN model
 
@@ -128,6 +131,14 @@ This runs a model sanity check using forward pass to verify that the ResNet-18 h
 - `CNN_Implementation/logs/mean_accuracy.csv`
 - `CNN_Implementation/plots/per_class_compare.png`
 - `CNN_Implementation/plots/mean_accuracy_curve.png`
+
+Top-1 vs Top-3 Accuracy 
+Top-1 accuracy is the percentage of test images where the model's single best guess was the 
+correct breed. This is the standard accuracy metric. 
+Top-3 accuracy is the percentage of test images where the correct breed appeared somewhere in 
+the model's top 3 predictions. This is the headline metric for our project.  
+Top-3 will always be higher than Top-1. 
+
 
 
 ## Main structure for the Logistic Regression
