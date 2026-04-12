@@ -23,7 +23,7 @@ pip install torch torchvision pandas matplotlib pillow numpy scikit-learn opencv
 ```
 
 ### Getting Started
-Be sure to name the folder with all of the images dataset in both Logistic Regression and the CNN_implementation.
+Be sure to name the folder with all of the images dataset in both Logistic Regression and the CNN_implementation. Also if you want the same results as us in the logistic regression use the following breeds: Italian_greyhound, Mexican_hairless and Pomeranian
 
 ## Main Structure for the CNN
 
