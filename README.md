@@ -22,6 +22,9 @@ To install of all of requirement you can use the following command:
 pip install torch torchvision pandas matplotlib pillow numpy scikit-learn opencv-python
 ```
 
+### Getting Started
+Be sure to name the folder with all of the images dataset in both Logistic Regression and the CNN_implementation.
+
 ## Main Structure for the CNN
 
 - `CNN_Implementation/dataset/`: dataset with all the breeds
