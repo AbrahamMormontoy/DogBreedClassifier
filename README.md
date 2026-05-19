@@ -143,14 +143,12 @@ the model's top 3 predictions. This is the headline metric for our project.
 Top-3 will always be higher than Top-1. 
 
 
-
+    
 ## Main structure for the Logistic Regression
 
-- `Logistic Regression/main.py`: get the classification report
-- `Logistic Regression/predict_single.py`: predict a single or varios image in the folder predictions
-- `Logistic Regression/resize_dataset.py`: fix the 
-- `Milestone1 Logistic Regression/image_loader.py`:
-- `Milestone1 Logistic Regression/logisticRegression/logistic_regression.py`:
+- `Logistic Regression/dataset`: dataset with all the images (you have to put it in the exact location)
+- `Logistic Regression/prediction`: predict the images in this folder using `predict_single.py`
+- `Logistic Regression/src`: all of the code for the linear regression
 
 ## How To Use the Logistic Regression
 
